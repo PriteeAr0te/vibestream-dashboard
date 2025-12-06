@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Slide, ToastContainer } from "react-toastify";
+import { ThemeProvider } from "@/components/provider/ThemeProvider";
+import SessionProviderWrapper from "@/components/provider/SessionProviderWrapper";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -63,8 +66,36 @@ export default function RootLayout({
       className={`${inter.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-background text-foreground font-sans">
-        {children}
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+        (function() {
+          const theme = localStorage.getItem('theme') || 'dark';
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        })();
+      `,
+          }}
+        />
+      </head>
+      <body className="h-screen overflow-hidden bg-background text-foreground font-sans">
+        <SessionProviderWrapper>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </SessionProviderWrapper>
+
+        <ToastContainer
+          position="top-right"
+          transition={Slide}
+          className="z-50"
+          autoClose={3000}
+          pauseOnHover
+        />
       </body>
     </html>
   );
