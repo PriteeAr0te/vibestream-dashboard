@@ -109,20 +109,24 @@ cd vibestream
 ```
 
 Install packages:
-
+```bash
 npm install
+```
 
 Setup environment:
 
 Create .env.local file:
 
+```bash
 NEXTAUTH_SECRET=your_secret
 NEXTAUTH_URL=http://localhost:3000
-
+```
 
 Run development server:
 
+```bash
 npm run dev
+```
 
 
 App will start at:
