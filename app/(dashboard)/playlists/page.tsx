@@ -108,7 +108,7 @@ export default function ForYouPage() {
                 {isLiked(song.id) ? (
                   <Heart size={18} className="text-red-500 fill-red-500" />
                 ) : (
-                  <Heart size={18} className="text-white" />
+                  <Heart size={18} className="text-icon" />
                 )}
               </button>
             </div>

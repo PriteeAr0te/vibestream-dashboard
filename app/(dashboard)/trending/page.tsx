@@ -113,7 +113,7 @@ export default function ForYouPage() {
                     className="text-red-500 fill-red-500"
                   />
                 ) : (
-                  <Heart size={18} className="text-white" />
+                  <Heart size={18} className="text-icon" />
                 )}
               </button>
             </div>
