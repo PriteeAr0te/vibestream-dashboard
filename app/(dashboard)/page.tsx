@@ -5,6 +5,7 @@ import { useTrendingSongs } from "@/hooks/useTrendingSongs";
 import Spinner from "@/components/common/Spinner";
 import { useDispatch } from "react-redux";
 import { setQueue, setTrack } from "@/store/slices/playerSlice";
+import Link from "next/link";
 
 export default function HomePage() {
   const { data: forYouData, isLoading: isLoadingForYou } = useTrendingSongs("playlists", 10);
@@ -24,7 +25,7 @@ export default function HomePage() {
     return <div className="p-4"><Spinner /></div>;
 
   return (
-    <div className="w-full p-6 text-foreground mb-24">
+    <div className="w-full p-3 lg:p-6 text-foreground mb-24">
       <h1 className="text-3xl font-bold mb-6">{getGreeting()}</h1>
 
       <div className="flex items-center justify-between mb-3">
@@ -37,25 +38,20 @@ export default function HomePage() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {forYouData?.slice(0, 4).map((item) => (
-          <div
-            key={item.id}
-            onClick={() => {
-              dispatch(setQueue(forYouData));
-              dispatch(setTrack(item));
-            }}
-            className="bg-accent rounded-xl p-3 hover:bg-br transition shadow-sm cursor-pointer"
-          >
-            <Image
-              src={item.image}
-              alt={item.title}
-              width={300}
-              height={300}
-              className="rounded-md object-cover w-full h-[180px]"
-            />
+          <Link key={item.id} href={`/playlist/${item.id}`}>
+            <div className="bg-accent rounded-xl p-3 hover:bg-br transition shadow-sm cursor-pointer">
+              <Image
+                src={item.image}
+                alt={item.title}
+                width={300}
+                height={300}
+                className="rounded-md object-cover w-full h-[180px]"
+              />
 
-            <p className="mt-2 font-semibold truncate">{item.title}</p>
-            <p className="text-sm text-para truncate">{item.artist}</p>
-          </div>
+              <p className="mt-2 font-semibold truncate">{item.title}</p>
+              <p className="text-sm text-para truncate">{item.artist}</p>
+            </div>
+          </Link>
         ))}
       </div>
 

@@ -1,7 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import uiPreferencesReducer, { UiPreferencesState } from "./slices/uiPreferencesSlice";
-import likedSongsReducer, { LikedSongsState } from "./slices/likedSongsSlice";
-import playerReducer from './slices/playerSlice'
+import likedSongsReducer from "./slices/likedSongsSlice";
+import playerReducer from './slices/playerSlice';
+import playlistsReducer from './slices/playlistSlice';
+import songsReducer from './slices/songSlice';
 
 const UI_PERSIST_KEY = "vibe_ui_preferences_v1";
 
@@ -28,8 +30,9 @@ export const store = configureStore({
     uiPreferences: uiPreferencesReducer,
     likedSongs: likedSongsReducer,
     player: playerReducer,
+    playlists: playlistsReducer,
+    songs: songsReducer,
   },
-  preloadedState: preloadedUI ? { uiPreferences: preloadedUI } : undefined,
 });
 
 store.subscribe(() => {

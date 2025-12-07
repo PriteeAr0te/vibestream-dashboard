@@ -3,17 +3,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import Image from "next/image";
-import { Heart, Play } from "lucide-react";
+import { Heart, Play, MoreVertical } from "lucide-react";
 import { toggleLikedSong } from "@/store/slices/likedSongsSlice";
 import { setQueue, setTrack } from "@/store/slices/playerSlice";
 import type { Song } from "@/store/slices/likedSongsSlice";
+import SongActionsMenu from "../../../components/music/SongActionMenu";
 
 export default function LikedSongsPage() {
   const dispatch = useDispatch();
-
-  const likedSongs = useSelector(
-    (state: RootState) => state.likedSongs.items
-  );
+  const likedSongs = useSelector((state: RootState) => state.likedSongs.items);
 
   const handlePlay = (song: Song) => {
     dispatch(setQueue(likedSongs));
@@ -25,7 +23,7 @@ export default function LikedSongsPage() {
   };
 
   return (
-    <div className="w-full p-6 text-foreground">
+    <div className="w-full p-3 lg:p-6 text-foreground mb-48 sm:mb-24">
       <h1 className="text-3xl font-bold mb-6">Liked Songs</h1>
 
       {likedSongs.length === 0 ? (
@@ -69,10 +67,14 @@ export default function LikedSongsPage() {
                   <Play size={18} className="text-white" />
                 </button>
 
+                {/* ACTIONS MENU - Add to Playlist */}
+                <SongActionsMenu song={song} />
+
                 {/* UNLIKE */}
                 <button
                   onClick={() => handleUnlike(song)}
                   className="p-2 rounded-full hover:bg-br transition"
+                  title="Remove from liked"
                 >
                   <Heart size={18} className="text-red-500 fill-red-500" />
                 </button>

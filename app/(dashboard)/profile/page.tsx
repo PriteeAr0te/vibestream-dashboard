@@ -57,7 +57,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground p-6 sm:p-10">
+    <div className="min-h-screen w-full bg-background text-foreground p-3 lg:p-6 sm:p-10">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-semibold mb-8">Profile</h1>
 

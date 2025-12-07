@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Pritee" }],
   creator: "Pritee",
   icons: {
-    icon: "./favicon.png",
+    icon: "/favicon.png",
   },
   metadataBase: new URL("http://localhost:3000"),
   openGraph: {

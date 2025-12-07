@@ -6,12 +6,10 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const protectedRoutes = [
-    "/library",
     "/playlists",
     "/liked-songs",
     "/profile",
     "/settings",
-    "/search"
   ];
 
   if (protectedRoutes.some(route => pathname.startsWith(route))) {
@@ -25,10 +23,8 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/library/:path*",
     "/playlists/:path*",
     "/profile/:path*",
     "/settings/:path*",
-    "/search/:path*",
   ],
 };

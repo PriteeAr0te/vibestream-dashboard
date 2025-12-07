@@ -2,83 +2,81 @@
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
-import { togglePlay, playNext, playPrev } from "@/store/slices/playerSlice";
-import { toggleLikedSong } from "../../store/slices/likedSongsSlice";
 import Image from "next/image";
-import { Play, Pause, SkipBack, SkipForward, Heart } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Play, Pause, SkipBack, SkipForward, Heart, Plus } from "lucide-react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { toggleLikedSong } from "@/store/slices/likedSongsSlice";
+import { togglePlay, playNext, playPrev } from "@/store/slices/playerSlice";
+import { PlaylistSelectModal } from "@/components/music/PlaylistSelectModal";
 
 export default function MusicPlayer() {
   const dispatch = useDispatch();
-
-  const { currentTrack, isPlaying } = useSelector(
-    (state: RootState) => state.player
-  );
-
-  const likedSongs = useSelector(
-    (state: RootState) => state.likedSongs.items
-  );
-
-  const isLiked = currentTrack
-    ? likedSongs.some((song) => song.id === currentTrack.id)
-    : false;
+  const { currentTrack, isPlaying } = useSelector((s: RootState) => s.player);
+  const likedSongs = useSelector((s: RootState) => s.likedSongs.items);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(0.7);
+  const [showModal, setShowModal] = useState(false);
+
+  const isLiked = !!currentTrack && likedSongs.some((s) => s.id === currentTrack.id);
 
   useEffect(() => {
-    if (!audioRef.current || !currentTrack) return;
-
     const audio = audioRef.current;
-    audio.src = currentTrack.preview || "/fallback.mp3";
+    if (!audio || !currentTrack) return;
 
+    audio.src = currentTrack.preview || "/fallback.mp3";
+    audio.volume = volume;
     audio.load();
 
-    if (isPlaying) {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          console.warn("Autoplay blocked");
-        });
-      }
-    } else {
-      audio.pause();
-    }
-  }, [currentTrack, isPlaying]);
+    if (isPlaying) audio.play().catch(() => {});
+  }, [currentTrack]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    isPlaying ? audio.play().catch(() => {}) : audio.pause();
+  }, [isPlaying]);
+
+  const handleEnded = useCallback(() => {
+    dispatch(playNext());
+  }, [dispatch]);
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
-    if (!audio || !audio.duration) return;
-
+    if (!audio?.duration) return;
     setProgress(audio.currentTime / audio.duration);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const audio = audioRef.current;
-    if (!audio || !audio.duration) return;
-
-    const newValue = Number(e.target.value);
-    audio.currentTime = newValue * audio.duration;
-    setProgress(newValue);
+    if (!audio?.duration) return;
+    const value = +e.target.value;
+    audio.currentTime = value * audio.duration;
+    setProgress(value);
   };
 
   const handleVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const vol = Number(e.target.value);
-    setVolume(vol);
-    if (audioRef.current) audioRef.current.volume = vol;
+    const value = +e.target.value;
+    setVolume(value);
+    if (audioRef.current) audioRef.current.volume = value;
   };
 
   return (
     <>
-      <audio ref={audioRef} onTimeUpdate={handleTimeUpdate} />
+      <audio
+        ref={audioRef}
+        onTimeUpdate={handleTimeUpdate}
+        onEnded={handleEnded}
+      />
 
       <div className="fixed bottom-1 left-0 w-full bg-accent border-t border-br p-3 flex flex-col md:flex-row items-center justify-between gap-3 z-50">
         
         <div className="flex items-center gap-3">
           {currentTrack ? (
             <Image
-              src={currentTrack.image}
+              src={currentTrack.image || "/fallback.jpg"}
               alt={currentTrack.title}
               width={50}
               height={50}
@@ -102,28 +100,15 @@ export default function MusicPlayer() {
 
         <div className="flex flex-col items-center gap-2 flex-1">
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => dispatch(playPrev())}
-              className="p-2 cursor-pointer hover:bg-br rounded-full transition"
-            >
+            <button onClick={() => dispatch(playPrev())} className="p-2 hover:bg-br rounded-full">
               <SkipBack size={20} />
             </button>
 
-            <button
-              onClick={() => dispatch(togglePlay())}
-              className="p-2 cursor-pointer bg-primary rounded-full transition hover:scale-105"
-            >
-              {isPlaying ? (
-                <Pause size={20} className="text-white" />
-              ) : (
-                <Play size={20} className="text-white" />
-              )}
+            <button onClick={() => dispatch(togglePlay())} className="p-2 bg-primary rounded-full hover:scale-105">
+              {isPlaying ? <Pause size={20} className="text-white" /> : <Play size={20} className="text-white" />}
             </button>
 
-            <button
-              onClick={() => dispatch(playNext())}
-              className="p-2 cursor-pointer hover:bg-br rounded-full transition"
-            >
+            <button onClick={() => dispatch(playNext())} className="p-2 hover:bg-br rounded-full">
               <SkipForward size={20} />
             </button>
           </div>
@@ -140,7 +125,6 @@ export default function MusicPlayer() {
         </div>
 
         <div className="flex items-center gap-3">
-
           <input
             type="range"
             min={0}
@@ -152,10 +136,9 @@ export default function MusicPlayer() {
           />
 
           <button
-            onClick={() =>
-              currentTrack && dispatch(toggleLikedSong(currentTrack))
-            }
-            className="p-2 rounded-full hover:bg-br cursor-pointer transition"
+            disabled={!currentTrack}
+            onClick={() => dispatch(toggleLikedSong(currentTrack!))}
+            className="p-2 rounded-full hover:bg-br disabled:opacity-40"
           >
             {isLiked ? (
               <Heart size={18} className="fill-red-500 text-red-500" />
@@ -163,8 +146,20 @@ export default function MusicPlayer() {
               <Heart size={18} />
             )}
           </button>
+
+          <button
+            disabled={!currentTrack}
+            onClick={() => setShowModal(true)}
+            className="p-2 rounded-full hover:bg-br disabled:opacity-40"
+          >
+            <Plus size={18} />
+          </button>
         </div>
       </div>
+
+      {showModal && currentTrack && (
+        <PlaylistSelectModal song={currentTrack} onClose={() => setShowModal(false)} />
+      )}
     </>
   );
 }

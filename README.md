@@ -1,36 +1,173 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎧 VibeStream — Music Streaming Dashboard
 
-## Getting Started
+A modern and fully-featured music streaming dashboard built with **Next.js 14 (App Router), TypeScript, TanStack Query, Redux Toolkit, Tailwind CSS, shadcn/ui, and NextAuth.js**.
 
-First, run the development server:
+Users can explore trending music, play preview clips, manage playlists, like tracks, and enjoy persistent playback — all wrapped in a visually engaging UI with light/dark mode support.
+
+---
+
+## 🚀 Features
+
+### 🏠 Home Screen
+- Fetches Trending **Songs, Albums, Playlists** via API
+- Responsive adaptive card layout
+- Lazy loading + Skeleton placeholders
+- “See all” & dynamic sections
+- Light/Dark theme toggle
+
+### ▶️ Persistent Music Player
+- Appears across all screens
+- Play / Pause / Next / Previous
+- Progress seekbar + Volume slider
+- Shows track art, title & artist
+- Global state sync with localStorage
+
+### 🎵 Playlist Management
+- Create new playlists
+- Add & Remove songs from playlists
+- Dedicated playlist pages
+- Protected routes when logged in
+
+### ❤️ Liked Songs
+- Add/remove liked songs
+- Persistent favorite collection
+
+### 🔐 Authentication (Credentials Provider)
+Mock login supported:
+
+| Email | Password |
+|-------|----------|
+| `user@vibe.com` | `password` |
+
+- Session persistence using JWT
+- Profile & Playlist routes protected
+- Avatar dropdown menu
+
+### 🔍 Smart Search
+- Debounced multi-source search
+- Searches across **songs + playlists**
+- Click to play song instantly or open playlist
+- Auto-updating real-time results
+
+### 📱 Fully Responsive UI
+- Desktop → Sidebar + large grid
+- Mobile → Bottom nav + compact player
+- Adaptive images, spacing & stacking
+
+---
+
+## 🛠️ Tech Stack
+
+| Category | Tools |
+|---------|------|
+| Framework | Next.js 14 – App Router |
+| Language | TypeScript |
+| State Management | Redux Toolkit |
+| API Caching | TanStack Query |
+| UI | shadcn/ui + Tailwind CSS |
+| Auth | NextAuth.js (Credentials) |
+| Deployment Ready | SEO Metadata + Optimized Images |
+
+---
+
+## 🧩 State Management Structure
+
+| Feature | Managed By |
+|--------|------------|
+| Music Player | Redux Slice: `playerSlice` |
+| Playlists CRUD | Redux Slice: `playlistSlice` |
+| Liked Songs | Redux Slice: `likedSongsSlice` |
+| API Fetching | TanStack Query |
+
+State persisting using `localStorage` ensures music keeps playing even after refresh 🎶
+
+---
+
+## 🌍 API Integration
+
+### 🔹 Trending Songs/Albums
+Fetching via custom Next.js route:
+
+/api/trending?type=songs&limit=50
+
+Data mapped to internal **SongItem** schema:
+- id
+- title
+- artist
+- image (high res)
+- preview audio fallback configured
+
+---
+
+## 📦 Installation & Setup
+
+Clone repository:
 
 ```bash
+git clone https://github.com/your-username/vibestream.git
+cd vibestream
+
+
+Install packages:
+
+npm install
+
+Setup environment:
+
+Create .env.local file:
+
+NEXTAUTH_SECRET=your_secret
+NEXTAUTH_URL=http://localhost:3000
+
+
+Run development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+App will start at:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+http://localhost:3000
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+🔐 Login Details (Required for Playlist & Profile)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Email           | Password   |
+| --------------- | ---------- |
+| `user@vibe.com` | `password` |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+📸 Screenshots
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Feature        | Image                            |
+| -------------- | -------------------------------- |
+| Home Screen    | ![](./screenshots/home.png)      |
+| Player Preview | ![](./screenshots/player.png)    |
+| All Playlists  | ![](./screenshots/playlists.png) |
+| Login Screen   | ![](./screenshots/login.png)     |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+✨ Future Enhancements
+
+Playlist sharing
+
+Equalizer animation on now playing
+
+User-uploaded playlist thumbnails
+
+Continuous scroll on Explore Pages
+
+Real streaming support with paid API
+
+
+🧑‍💻 Author
+
+Built by Pritee
+React & MERN Stack Developer
+LinkedIn / Portfolio (add links)
+
+
+⭐ Feedback
+
+If you like this project, please ⭐ the repo!
+Contributions and suggestions are always welcome.

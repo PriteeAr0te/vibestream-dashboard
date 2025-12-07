@@ -1,14 +1,12 @@
+'use client'
+
 import Sidebar from "@/components/layout/Sidebar";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import TopBar from "@/components/layout/TopBar";
 import MusicPlayer from "@/components/ui/MusicPlayer";
+import { useLoadPlaylists } from "@/hooks/useLoadPlaylist";
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  // const session = await getServerSession(authOptions);
-
-  // if (!session) redirect("/login");
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+useLoadPlaylists();
 
   return (
     <div className="flex h-full items-start">
