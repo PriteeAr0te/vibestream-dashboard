@@ -141,16 +141,6 @@ http://localhost:3000
 | `user@vibe.com` | `password` |
 
 
-📸 Screenshots
-
-| Feature        | Image                            |
-| -------------- | -------------------------------- |
-| Home Screen    | ![](./screenshots/home.png)      |
-| Player Preview | ![](./screenshots/player.png)    |
-| All Playlists  | ![](./screenshots/playlists.png) |
-| Login Screen   | ![](./screenshots/login.png)     |
-
-
 ✨ Future Enhancements
 
 Playlist sharing
