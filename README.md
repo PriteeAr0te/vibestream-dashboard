@@ -106,7 +106,7 @@ Clone repository:
 ```bash
 git clone https://github.com/your-username/vibestream.git
 cd vibestream
-
+```
 
 Install packages:
 
