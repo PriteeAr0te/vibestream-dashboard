@@ -22,7 +22,7 @@ export default function ForYouPage() {
   const likedSongs = useSelector((state: RootState) => state.likedSongs.items);
 
   const [limit, setLimit] = useState(10);
-  const { data: songs = [], isLoading, isError } = useTrendingSongs("playlists", limit);
+  const { data: songs = [], isLoading, isError } = useTrendingSongs("songs", limit);
 
   const loaderRef = useRef<HTMLDivElement>(null);
 
@@ -62,7 +62,6 @@ export default function ForYouPage() {
             key={song.id}
             className="flex items-center justify-between bg-accent rounded-xl p-3 hover:bg-br transition cursor-pointer"
           >
-            {/* Thumbnail */}
             <div className="flex items-center gap-3">
               <Image
                 src={song.image}
@@ -72,7 +71,6 @@ export default function ForYouPage() {
                 className="rounded-md object-cover"
               />
 
-              {/* Title & Artist */}
               <div className="flex flex-col">
                 <p className="font-semibold truncate max-w-[200px] sm:max-w-[300px]">{song.title}</p>
                 <p className="text-sm text-para truncate max-w-[200px] sm:max-w-[300px]">
@@ -81,9 +79,9 @@ export default function ForYouPage() {
               </div>
             </div>
 
-            {/* Actions */}
+
             <div className="flex items-center gap-4">
-              {/* Play button */}
+
               <button
                 className="p-2 bg-primary rounded-full hover:scale-105 transition"
                 onClick={() => console.log("Play", song.title)}
@@ -91,7 +89,6 @@ export default function ForYouPage() {
                 <Play size={18} className="text-white" />
               </button>
 
-              {/* Like button */}
               <button
                 className={`p-2 rounded-full transition ${isLiked(song.id) ? "bg-red-500" : "bg-accent hover:bg-br"
                   }`}
@@ -103,7 +100,6 @@ export default function ForYouPage() {
           </div>
         ))}
 
-        {/* Loader for infinite scroll */}
         <div ref={loaderRef} className="h-10"></div>
       </div>
     </div>

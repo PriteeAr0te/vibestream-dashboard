@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import uiPreferencesReducer, { UiPreferencesState } from "./slices/uiPreferencesSlice";
+import likedSongsReducer, { LikedSongsState } from "./slices/likedSongsSlice";
 
-const PERSIST_KEY = "vibe_ui_preferences_v1";
+const UI_PERSIST_KEY = "vibe_ui_preferences_v1";
 
-function loadState(): UiPreferencesState | undefined {
+// Load UI preferences
+function loadUIState(): UiPreferencesState | undefined {
   try {
-    const raw = localStorage.getItem(PERSIST_KEY);
+    const raw = localStorage.getItem(UI_PERSIST_KEY);
     if (!raw) return undefined;
     return JSON.parse(raw) as UiPreferencesState;
   } catch {
@@ -13,25 +15,25 @@ function loadState(): UiPreferencesState | undefined {
   }
 }
 
-function saveState(state: UiPreferencesState) {
+function saveUIState(state: UiPreferencesState) {
   try {
-    localStorage.setItem(PERSIST_KEY, JSON.stringify(state));
-  } catch {
-  }
+    localStorage.setItem(UI_PERSIST_KEY, JSON.stringify(state));
+  } catch {}
 }
 
-const preloaded = typeof window !== "undefined" ? loadState() : undefined;
+const preloadedUI = typeof window !== "undefined" ? loadUIState() : undefined;
 
 export const store = configureStore({
   reducer: {
     uiPreferences: uiPreferencesReducer,
+    likedSongs: likedSongsReducer,
   },
-  preloadedState: preloaded ? { uiPreferences: preloaded } : undefined,
+  preloadedState: preloadedUI ? { uiPreferences: preloadedUI } : undefined,
 });
 
 store.subscribe(() => {
   const state = store.getState();
-  saveState(state.uiPreferences);
+  saveUIState(state.uiPreferences);
 });
 
 export type AppDispatch = typeof store.dispatch;

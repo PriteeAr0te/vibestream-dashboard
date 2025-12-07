@@ -1,13 +1,22 @@
+// hooks/useTrending.ts
 import { useQuery } from "@tanstack/react-query";
-import { TopFeedItem } from "../lib/api/itunes";
 
-export function useTrendingSongs() {
-  return useQuery<TopFeedItem[]>({
-    queryKey: ["trending-songs"],
-    queryFn: async () => {
-      const res = await fetch("/api/trending");
+export interface Item {
+  id: string;
+  title: string;
+  artist: string;
+  image: string;
+  preview?: string;
+}
+
+export function useTrendingSongs(type: "songs" | "albums" | "playlists", limit = 50) {
+  return useQuery({
+    queryKey: ["trending", type, limit],
+    queryFn: async (): Promise<Item[]> => {
+      const res = await fetch(`/api/trending?type=${type}&limit=${limit}`);
       if (!res.ok) throw new Error("Failed to fetch trending");
-      return res.json();
+      const data = await res.json();
+      return data.results;
     },
     staleTime: 1000 * 60 * 5,
   });

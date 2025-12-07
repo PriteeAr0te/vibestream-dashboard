@@ -1,4 +1,4 @@
-import { Home, Search, Library, Music, Heart } from "lucide-react";
+import { Home, Search, Library, Music, Heart, TrendingUp, Album } from "lucide-react";
 
 export const sidebarMenu = [
   {
@@ -12,9 +12,14 @@ export const sidebarMenu = [
     path: "/search",
   },
   {
-    label: "Library",
-    icon: Library,
-    path: "/library",
+    label: "Albums",
+    icon: Album,
+    path: "/albums",
+  },
+  {
+    label: "Trending",
+    icon: TrendingUp,
+    path: "/trending",
   },
   {
     label: "Playlists",

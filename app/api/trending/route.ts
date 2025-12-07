@@ -1,27 +1,30 @@
+// /api/trending/route.ts
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const limit = searchParams.get("limit") || "50";
+  const type = searchParams.get("type") || "songs"; 
+
+  const APPLE_URL = `https://rss.applemarketingtools.com/api/v2/in/music/most-played/${limit}/${type}.json`;
+
   try {
-    const url =
-      "https://rss.itunes.apple.com/api/v1/in/apple-music/top-songs/all/20/explicit.json";
-
-    const res = await fetch(url, {
-      cache: "no-store",
-    });
-
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: "Failed to fetch iTunes feed" },
-        { status: res.status }
-      );
-    }
+    const res = await fetch(APPLE_URL, { cache: "no-store" });
+    if (!res.ok) throw new Error("Failed to fetch Apple RSS");
 
     const json = await res.json();
-    return NextResponse.json(json.feed.results);
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Server error fetching data" },
-      { status: 500 }
-    );
+    const items = json?.feed?.results ?? [];
+
+    const results = items.map((item: any) => ({
+      id: item.id,
+      title: item.name,
+      artist: item.artistName,
+      image: item.artworkUrl100?.replace("100x100bb.jpg", "500x500bb.jpg"),
+      preview: null, // RSS has no audio preview
+    }));
+
+    return NextResponse.json({ results });
+  } catch (err) {
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

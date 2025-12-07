@@ -22,7 +22,7 @@ export default function ForYouPage() {
   const likedSongs = useSelector((state: RootState) => state.likedSongs.items);
 
   const [limit, setLimit] = useState(10);
-  const { data: songs = [], isLoading, isError } = useTrendingSongs("playlists", limit);
+  const { data: songs = [], isLoading, isError } = useTrendingSongs("albums", limit);
 
   const loaderRef = useRef<HTMLDivElement>(null);
 
