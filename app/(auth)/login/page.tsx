@@ -9,11 +9,15 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const LoginPage = () => {
     const router = useRouter();
     const params = useSearchParams();
     const google = params.get("googleLogin");
+
+    const toastEnabled = useSelector((s: RootState) => s.uiPreferences.toastEnabled);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -43,11 +47,13 @@ const LoginPage = () => {
             setError("Invalid email or password.");
             return;
         }
-        toast.success("Login Successful")
+        if (toastEnabled) {
+            toast.success("Login Successful")
+        }
         router.push("/");
     };
 
-    if (google === "success") {
+    if (google === "success" && toastEnabled) {
         toast.success("Logged in with Google");
     }
 
@@ -56,10 +62,10 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="w-full h-screen flex justify-center items-center py-8 px-3 bg-[#0F0F0F]">
+        <div className="w-full h-screen flex justify-center items-center py-8 px-3 bg-background">
             <form
                 onSubmit={handleLogin}
-                className="w-full max-w-xl bg-[#1A1A1A] border border-[#23483C] flex flex-col items-center shadow-lg rounded-lg p-5"
+                className="w-full max-w-xl bg-accent border border-br flex flex-col items-center shadow-lg rounded-lg p-5"
             >
                 <div className="mb-5 text-center w-full flex flex-col items-center">
                     <Image src={Logo} alt="Vibestream Logo" width={150} height={100} />
@@ -73,7 +79,6 @@ const LoginPage = () => {
 
                 <div className="space-y-4 mb-5 w-full">
                     <InputComponent
-                        background="#262626"
                         type="email"
                         name="email"
                         placeholder="Enter your email id."
@@ -84,7 +89,6 @@ const LoginPage = () => {
                     />
 
                     <InputComponent
-                        background="#262626"
                         type="password"
                         name="password"
                         placeholder="Enter your password"

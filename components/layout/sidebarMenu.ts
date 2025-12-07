@@ -24,6 +24,6 @@ export const sidebarMenu = [
   {
     label: "Liked Songs",
     icon: Heart,
-    path: "/liked",
+    path: "/liked-songs",
   },
 ];

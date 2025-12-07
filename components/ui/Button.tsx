@@ -17,7 +17,7 @@ const Button: React.FC<ButtonProps> = ({
         <button
             type={type}
             onClick={onClick}
-            className={`w-${width} py-2 px-3 border border-[#23483C] bg-primary text-white rounded-lg 
+            className={`w-${width} py-2 px-3 border border-primary bg-primary text-foreground rounded-lg 
             text-center hover:border-primary hover:bg-transparent transition-all duration-300 cursor-pointer`}
         >
             {text}

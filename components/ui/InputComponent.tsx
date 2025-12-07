@@ -11,7 +11,6 @@ interface InputProps {
     name: string;
     value: string;
     error?: string;
-    background?: string;
 }
 
 const InputComponent: React.FC<InputProps> = ({
@@ -22,7 +21,6 @@ const InputComponent: React.FC<InputProps> = ({
     name,
     value,
     error,
-    background = "#262626",
 }) => {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -35,13 +33,12 @@ const InputComponent: React.FC<InputProps> = ({
 
             <div className="w-full relative">
                 <input
-                    className="w-full mt-1.5 py-2 px-3 rounded-lg focus:border focus:outline-none focus:border-primary text-foreground placeholder:text-para"
+                    className="w-full mt-1.5 py-2 px-3 bg-light rounded-lg focus:border focus:outline-none focus:border-primary text-foreground placeholder:text-para"
                     type={inputType}
                     name={name}
                     value={value}
                     placeholder={placeholder}
                     onChange={onChange}
-                    style={{ background }}
                 />
 
                 {type === "password" && (

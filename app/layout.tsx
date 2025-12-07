@@ -4,6 +4,7 @@ import "./globals.css";
 import { Slide, ToastContainer } from "react-toastify";
 import { ThemeProvider } from "@/components/provider/ThemeProvider";
 import SessionProviderWrapper from "@/components/provider/SessionProviderWrapper";
+import QueryProvider from "@/components/provider/QueryProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Pritee" }],
   creator: "Pritee",
   icons: {
-    icon: "/favicon.ico",
+    icon: "../public/img/favicon.png",
   },
   metadataBase: new URL("http://localhost:3000"),
   openGraph: {
@@ -85,7 +86,9 @@ export default function RootLayout({
       <body className="h-screen overflow-hidden bg-background text-foreground font-sans">
         <SessionProviderWrapper>
           <ThemeProvider>
-            {children}
+            <QueryProvider>
+              {children}
+            </QueryProvider>
           </ThemeProvider>
         </SessionProviderWrapper>
 
@@ -97,6 +100,7 @@ export default function RootLayout({
           pauseOnHover
         />
       </body>
+
     </html>
   );
 }
