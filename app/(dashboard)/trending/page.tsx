@@ -5,24 +5,25 @@ import Image from "next/image";
 import { useTrendingSongs } from "../../../hooks/useTrendingSongs";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { toggleLikedSong } from "../../../store/slices/likedSongsSlice";
+import { toggleLikedSong } from "@/store/slices/likedSongsSlice";
 import { Play, Heart } from "lucide-react";
 import Spinner from "@/components/common/Spinner";
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  image: string;
-  preview?: string;
-}
+import { setQueue, setTrack } from "@/store/slices/playerSlice";
+import type { Song } from "@/store/slices/likedSongsSlice";
 
 export default function ForYouPage() {
   const dispatch = useDispatch();
-  const likedSongs = useSelector((state: RootState) => state.likedSongs.items);
+
+  const likedSongs = useSelector(
+    (state: RootState) => state.likedSongs.items
+  );
+
+  const isLiked = (id: string) =>
+    likedSongs.some((song) => song.id === id);
 
   const [limit, setLimit] = useState(10);
-  const { data: songs = [], isLoading, isError } = useTrendingSongs("songs", limit);
+  const { data: songs = [], isLoading, isError } =
+    useTrendingSongs("songs", limit);
 
   const loaderRef = useRef<HTMLDivElement>(null);
 
@@ -43,14 +44,23 @@ export default function ForYouPage() {
     };
   }, [songs, limit]);
 
-  if (isLoading) return <p className="p-4"><Spinner /></p>;
+  if (isLoading)
+    return (
+      <div className="p-4">
+        <Spinner />
+      </div>
+    );
+
   if (isError) return <p className="p-4">Failed to load songs</p>;
+
+  const handlePlay = (song: Song) => {
+    dispatch(setQueue(songs));
+    dispatch(setTrack(song));
+  };
 
   const handleLike = (song: Song) => {
     dispatch(toggleLikedSong(song));
   };
-
-  const isLiked = (id: string) => likedSongs.some((s) => s.id === id);
 
   return (
     <div className="w-full p-6 text-foreground">
@@ -60,9 +70,12 @@ export default function ForYouPage() {
         {songs.map((song) => (
           <div
             key={song.id}
-            className="flex items-center justify-between bg-accent rounded-xl p-3 hover:bg-br transition cursor-pointer"
+            className="flex sm:flex-row flex-col-reverse gap-y-2 items-center justify-between bg-accent rounded-xl p-3 transition"
           >
-            <div className="flex items-center gap-3">
+            <div
+              className="w-full sm:w-fit flex items-center gap-3 cursor-pointer"
+              onClick={() => handlePlay(song)}
+            >
               <Image
                 src={song.image}
                 alt={song.title}
@@ -72,29 +85,36 @@ export default function ForYouPage() {
               />
 
               <div className="flex flex-col">
-                <p className="font-semibold truncate max-w-[200px] sm:max-w-[300px]">{song.title}</p>
+                <p className="font-semibold truncate max-w-[200px] sm:max-w-[300px]">
+                  {song.title}
+                </p>
                 <p className="text-sm text-para truncate max-w-[200px] sm:max-w-[300px]">
                   {song.artist}
                 </p>
               </div>
             </div>
 
-
-            <div className="flex items-center gap-4">
+            <div className="sm:w-fit w-full flex sm:justify-start justify-end items-center gap-4">
 
               <button
+                onClick={() => handlePlay(song)}
                 className="p-2 bg-primary rounded-full hover:scale-105 transition"
-                onClick={() => console.log("Play", song.title)}
               >
                 <Play size={18} className="text-white" />
               </button>
 
               <button
-                className={`p-2 rounded-full transition ${isLiked(song.id) ? "bg-red-500" : "bg-accent hover:bg-br"
-                  }`}
                 onClick={() => handleLike(song)}
+                className="p-2 rounded-full hover:bg-br transition"
               >
-                <Heart size={18} className="text-white" />
+                {isLiked(song.id) ? (
+                  <Heart
+                    size={18}
+                    className="text-red-500 fill-red-500"
+                  />
+                ) : (
+                  <Heart size={18} className="text-white" />
+                )}
               </button>
             </div>
           </div>

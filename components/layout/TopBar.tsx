@@ -9,21 +9,34 @@ import Image from "next/image";
 
 export default function TopBar() {
   const { theme, toggleTheme } = useTheme();
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState(false);
-
   const { data: session, status } = useSession();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const stored =
-    typeof window !== "undefined" ? localStorage.getItem("avatar") : null;
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
 
-  const sessionAvatar = session?.user?.avatar;
+  useEffect(() => {
+    const stored = localStorage.getItem("avatar");
 
-  const avatar = sessionAvatar || stored || "/img/favicon.png";
+    if (stored) {
+      setAvatarSrc(stored);
+      return;
+    }
 
-  const [fallback, setFallback] = useState<string | null>(null);
+    if (session?.user?.avatar) {
+      setAvatarSrc(session.user.avatar);
+      return;
+    }
 
-  const finalSrc = fallback || avatar;
+    setAvatarSrc("/img/favicon.png");
+  }, [session]);
+
+  useEffect(() => {
+    const handler = (e: any) => setAvatarSrc(e.detail);
+    window.addEventListener("avatar-updated", handler);
+    return () => window.removeEventListener("avatar-updated", handler);
+  }, []);
+
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const close = (e: MouseEvent) => {
@@ -31,19 +44,16 @@ export default function TopBar() {
         setOpen(false);
       }
     };
-
     document.addEventListener("click", close);
     return () => document.removeEventListener("click", close);
   }, []);
-
-  const closeDropdown = () => setOpen(false);
 
   const menuItem =
     "flex items-center gap-2 px-4 py-2 text-sm hover:bg-primary/80 cursor-pointer transition";
 
   return (
     <div className="bg-background h-[64px] border-b border-br px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 flex items-center justify-between">
- 
+
       <div className="py-2.5 px-3 min-w-[250px] bg-light rounded-xl flex gap-2 items-center">
         <Search size={20} className="text-icon" />
         <input
@@ -54,7 +64,7 @@ export default function TopBar() {
       </div>
 
       <div className="flex items-center gap-3">
-     
+
         <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-light transition">
           {theme === "dark" ? <Sun size={24} /> : <Moon size={24} />}
         </button>
@@ -67,16 +77,15 @@ export default function TopBar() {
             }}
             className="p-2 rounded-lg hover:bg-light transition flex items-center justify-center"
           >
-            {status === "loading" ? (
+            {status === "loading" || !avatarSrc ? (
               <User size={24} className="opacity-50" />
             ) : (
               <Image
+                src={avatarSrc}
                 width={32}
                 height={32}
-                src={finalSrc}
                 alt="User avatar"
                 className="w-8 h-8 rounded-full object-cover border border-br"
-                onError={() => setFallback("/img/favicon.png")}
               />
             )}
           </button>
@@ -85,11 +94,11 @@ export default function TopBar() {
             <div className="absolute right-0 mt-2 w-52 bg-light border border-br text-foreground rounded-md shadow-xl py-1 z-50">
               {status === "authenticated" ? (
                 <>
-                  <Link href="/profile" onClick={closeDropdown} className={menuItem}>
+                  <Link href="/profile" onClick={() => setOpen(false)} className={menuItem}>
                     <User size={16} /> Profile
                   </Link>
 
-                  <Link href="/settings" onClick={closeDropdown} className={menuItem}>
+                  <Link href="/settings" onClick={() => setOpen(false)} className={menuItem}>
                     <Settings size={16} /> Settings
                   </Link>
 
@@ -97,7 +106,7 @@ export default function TopBar() {
 
                   <button
                     onClick={() => {
-                      closeDropdown();
+                      setOpen(false);
                       signOut({ callbackUrl: "/" });
                     }}
                     className={menuItem + " w-full text-left"}
@@ -106,7 +115,7 @@ export default function TopBar() {
                   </button>
                 </>
               ) : (
-                <Link href="/login" onClick={closeDropdown} className={menuItem}>
+                <Link href="/login" onClick={() => setOpen(false)} className={menuItem}>
                   <User size={16} /> Login
                 </Link>
               )}

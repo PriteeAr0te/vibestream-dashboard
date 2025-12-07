@@ -1,4 +1,3 @@
-// /api/trending/route.ts
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -20,7 +19,7 @@ export async function GET(request: Request) {
       title: item.name,
       artist: item.artistName,
       image: item.artworkUrl100?.replace("100x100bb.jpg", "500x500bb.jpg"),
-      preview: null, // RSS has no audio preview
+      preview: null, 
     }));
 
     return NextResponse.json({ results });

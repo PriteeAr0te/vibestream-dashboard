@@ -1,4 +1,3 @@
-// hooks/useTrending.ts
 import { useQuery } from "@tanstack/react-query";
 
 export interface Item {
@@ -16,7 +15,16 @@ export function useTrendingSongs(type: "songs" | "albums" | "playlists", limit =
       const res = await fetch(`/api/trending?type=${type}&limit=${limit}`);
       if (!res.ok) throw new Error("Failed to fetch trending");
       const data = await res.json();
-      return data.results;
+
+      const results: Item[] = data.results.map((item: Item) => ({
+        id: item.id,
+        title: item.title,
+        artist: item.artist,
+        image: item.image,
+        preview: item.preview || "/fallback.mp3",
+      }));
+
+      return results;
     },
     staleTime: 1000 * 60 * 5,
   });

@@ -14,7 +14,6 @@ export interface LikedSongsState {
 
 const PERSIST_KEY = "vibe_liked_songs_v1";
 
-// Load from localStorage
 function loadState(): LikedSongsState {
   try {
     const raw = localStorage.getItem(PERSIST_KEY);
@@ -25,7 +24,6 @@ function loadState(): LikedSongsState {
   }
 }
 
-// Save to localStorage
 function saveState(state: LikedSongsState) {
   try {
     localStorage.setItem(PERSIST_KEY, JSON.stringify(state));
@@ -45,7 +43,7 @@ export const likedSongsSlice = createSlice({
       } else {
         state.items.push(action.payload);
       }
-      saveState(state); // persist immediately
+      saveState(state); 
     },
     clearLikedSongs: (state) => {
       state.items = [];

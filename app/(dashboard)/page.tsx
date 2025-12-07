@@ -3,11 +3,15 @@
 import Image from "next/image";
 import { useTrendingSongs } from "@/hooks/useTrendingSongs";
 import Spinner from "@/components/common/Spinner";
+import { useDispatch } from "react-redux";
+import { setQueue, setTrack } from "@/store/slices/playerSlice";
 
 export default function HomePage() {
   const { data: forYouData, isLoading: isLoadingForYou } = useTrendingSongs("playlists", 10);
   const { data: trendingData, isLoading: isLoadingTrending } = useTrendingSongs("songs", 8);
   const { data: albumsData, isLoading: isLoadingAlbums } = useTrendingSongs("albums", 8);
+
+  const dispatch = useDispatch();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -17,10 +21,10 @@ export default function HomePage() {
   };
 
   if (isLoadingForYou || isLoadingTrending || isLoadingAlbums)
-    return <p className="p-4"><Spinner /></p>;
+    return <div className="p-4"><Spinner /></div>;
 
   return (
-    <div className="w-full p-6 text-foreground">
+    <div className="w-full p-6 text-foreground mb-24">
       <h1 className="text-3xl font-bold mb-6">{getGreeting()}</h1>
 
       <div className="flex items-center justify-between mb-3">
@@ -35,6 +39,10 @@ export default function HomePage() {
         {forYouData?.slice(0, 4).map((item) => (
           <div
             key={item.id}
+            onClick={() => {
+              dispatch(setQueue(forYouData));
+              dispatch(setTrack(item));
+            }}
             className="bg-accent rounded-xl p-3 hover:bg-br transition shadow-sm cursor-pointer"
           >
             <Image
@@ -63,6 +71,10 @@ export default function HomePage() {
         {trendingData?.slice(0, 4).map((item) => (
           <div
             key={item.id}
+            onClick={() => {
+              dispatch(setQueue(trendingData));
+              dispatch(setTrack(item));
+            }}
             className="bg-accent rounded-xl p-3 hover:bg-br transition shadow-sm cursor-pointer"
           >
             <Image
@@ -91,6 +103,10 @@ export default function HomePage() {
         {albumsData?.slice(0, 4).map((item) => (
           <div
             key={item.id}
+            onClick={() => {
+              dispatch(setQueue(albumsData));
+              dispatch(setTrack(item));
+            }}
             className="bg-accent rounded-xl p-3 hover:bg-br transition shadow-sm cursor-pointer"
           >
             <Image
