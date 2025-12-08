@@ -51,12 +51,13 @@ export default function SettingsPage() {
                     <SettingsRow title="Playback quality" subtitle="Choose streaming quality (mock)">
                         <Select
                             value={prefs.playbackQuality}
-                            onChange={(v) => dispatch(setPlaybackQuality(v))}
+                            onChange={(v) => dispatch(setPlaybackQuality(v as "normal" | "high"))}
                             options={[
                                 { value: "normal", label: "Normal" },
                                 { value: "high", label: "High" },
                             ]}
                         />
+
                     </SettingsRow>
 
                     <SettingsRow title="Crossfade" subtitle="Crossfade duration between tracks">

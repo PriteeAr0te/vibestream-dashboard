@@ -1,9 +1,9 @@
 "use client";
 
-import { Song } from "@/hooks/useTrendingSongs";
+import { Item } from "@/hooks/useTrendingSongs";
 import Image from "next/image";
 
-export function SongCard({ item }: { item: Song }) {
+export function SongCard({ item }: { item: Item }) {
   return (
     <div className="p-3 rounded-md bg-accent hover:bg-br transition shadow-sm hover:shadow-md">
       <Image
