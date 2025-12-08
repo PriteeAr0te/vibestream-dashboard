@@ -31,7 +31,7 @@ export default function SettingsPage() {
     }
 
     return (
-        <div className="max-w-4xl min-h-full mx-auto p-4 py-8 sm:p-3 lg:p-6 flex-1 overflow-y-auto scrollable-container">
+        <div className="max-w-4xl min-h-full mx-auto p-4 py-8 sm:p-3 lg:p-6 flex-1 overflow-y-auto scrollable-container mb-48 sm:mb-24">
             <h1 className="text-2xl font-semibold mb-3 text-foreground">Settings</h1>
             <p className="text-sm text-para mb-6">App preferences & account settings.</p>
 

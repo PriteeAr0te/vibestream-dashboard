@@ -63,7 +63,7 @@ export default function ForYouPage() {
   };
 
   return (
-    <div className="w-full p-3 lg:p-6 text-foreground">
+    <div className="w-full p-3 lg:p-6 text-foreground mb-48 sm:mb-24">
       <h1 className="text-3xl font-bold mb-6">For You</h1>
 
       <div className="flex flex-col gap-3">
