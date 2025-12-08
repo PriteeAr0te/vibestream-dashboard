@@ -1,4 +1,6 @@
-# 🎧 VibeStream — Music Streaming Dashboard
+# 🎧 VibeStream — Music Streaming Dashboard 
+### 🔗 Live Demo  
+https://vibestream-dashboard.vercel.app/
 
 A modern and fully-featured music streaming dashboard built with **Next.js 14 (App Router), TypeScript, TanStack Query, Redux Toolkit, Tailwind CSS, shadcn/ui, and NextAuth.js**.
 
