@@ -26,6 +26,8 @@ export function useTrendingSongs(type: "songs" | "albums" | "playlists", limit =
 
       return results;
     },
+
+    placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
   });
 }
